@@ -81,6 +81,34 @@ function mapUserlisttoResourceObject(usersData) {
     }
 }
 
+function mapReservationToResourceObject(reservationData) {
+    return {
+        "_links": {
+            "self": halLinkObject(`/fields/${reservationData.field_id}/reservations/${reservationData.id}`),
+            "delete": halLinkObject(`/fields/${reservationData.field_id}/reservations/${reservationData.id}`),
+            "reservations": halLinkObject(`/fields/{?id}/reservations`)
+        },
+        reservationData
+    }
+}
+
+function mapReservationListToResourceObject(reservationsData) {
+
+    return {
+        "_links": {
+            "self": halLinkObject(`/fields/{?id}/reservations`),
+            "find": halLinkObject(`/fields/{?id}/reservations/{?id}`),
+            "create": halLinkObject(`/fields/{?id}/reservations`),
+            "delete": halLinkObject(`/fields/{?id}/reservations/{?id}`)
+        },
+        "embedded": {
+            "Reservations":[
+                reservationsData.map(resa => mapReservationToResourceObject(resa))
+            ]
+        }
+    }
+}
+
 
 module.exports = { 
     halLinkObject,
@@ -88,4 +116,6 @@ module.exports = {
     mapFieldListToResourceObject,
     mapUsertoResourceObject,
     mapUserlisttoResourceObject,
+    mapReservationToResourceObject,
+    mapReservationListToResourceObject,
 };

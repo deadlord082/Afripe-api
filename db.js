@@ -13,7 +13,14 @@ class Field {
   }
 }
 
-class Reservation {}
+class Reservation {
+  constructor(id, date, time, field_id) {
+    this.id = id;
+    this.date = date;
+    this.time = time;
+    this.field_id = field_id;
+  }
+}
 
 
 class User {
@@ -50,8 +57,35 @@ const fields = [
   ),
 ];
 
-//On imagine que l'admin a lui même fourni les données
+
 const users = [new User(1,'admybad', 'admybad', true)];
 
-const reservations = [];    
-module.exports = { fields, users };
+const reservations = [
+  new Reservation(
+    1,
+    "12-34-1899",
+    "29:28",
+    1
+  ),
+  new Reservation(
+    2,
+    "67-76-4638",
+    "29:28",
+    1
+  ),
+  new Reservation(
+    3,
+    "68-73-9373",
+    "29:28",
+    2
+  ),
+  new Reservation(
+    4,
+    "73-01-2800",
+    "29:28",
+    3
+  ),
+];
+
+
+module.exports = { fields, users ,reservations,Reservation,Field};

@@ -11,15 +11,23 @@ function authenticate(login, password) {
       //compareSync(password en clair, password hashé en base)
       return user.pseudo === login && bcrypt.compareSync(password, user.password)
     });
-   
-    if (user === undefined) return false;
-   
-    return true;
+    
+    if (user === undefined) {
+      return false;
+   }
+   else{
+      return true;
+   }
   }
 
   function isAdmin(pseudo) {
     const user = findUserByPseudo(pseudo);
-    return user && user.isAdmin;
+    if (user === null) {
+      return false;
+    }
+    else{
+        return user.isAdmin;
+    }
   }
   
 
@@ -28,24 +36,33 @@ function authenticate(login, password) {
     const user = database.users.find((user) => {
       return user.pseudo === login
     });
-   
+
     if (user === undefined) {
-        return false;
+        return null;
     }
     else{
-        return true;
+        return user;
     }
   }
    
   router.post("/login", (req, res, next) => {
-    const login = req.body.pseudo;
+    const login = req.body.login;
     const password = req.body.password;
   
     if (authenticate(login, password)) {
-      if (!isAdmin(login, password)) {
-        //A completer avec une reponse propre
-        res.status(401).send("Go away !");
-        return;
+      if (!isAdmin(login)) {
+        let responseObject = {
+          _links: {
+            self: hal.halLinkObject("/login"),
+          },
+          message: "Vous ne disposez pas des droits nécessaire. Merci de demander l'accès à votre administrateur réseau.",
+        };
+        //Sinon, on retourne un message d'erreur
+        res.status(401).format({
+          "application/hal+json": function () {
+            res.send(responseObject);
+          },
+        });
       }
   
       //User est authentifié et admin: Génération d'un JSON Web Token
@@ -55,9 +72,9 @@ function authenticate(login, password) {
       let responseObject = {
         _links: {
           self: hal.halLinkObject("/login"),
-          //Indiquer au client les URL /concerts/1/reservations, /concerts/2/reservations, etc.
+          //Indiquer au client les URL /fields/1/reservations, /fields/2/reservations, etc.
           reservations: hal.halLinkObject(
-            "/concerts/{id}/reservations",
+            "/fields/{id}/reservations",
             "string",
             "",
             true
