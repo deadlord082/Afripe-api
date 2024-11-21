@@ -4,8 +4,8 @@
 
 1. [Lancer le projet](#Lancer-le-projet)
 2. [Conception](#Conception)
-    2.1 [Dictionnaire des données](#Dictionnaire-des-données)
-    2.2 [Liste des ressources](#Liste-des-ressources)
+* [Dictionnaire des données](#Dictionnaire-des-données)
+* [Liste des ressources](#Liste-des-ressources)
 3. [Sécurité](#Sécurité)
 4. [Remarques](#Remarques)
 5. [Références](#Références)
