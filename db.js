@@ -14,9 +14,9 @@ class Field {
 }
 
 class Reservation {
-  constructor(id, date, time, field_id) {
+  constructor(id, day, time, field_id) {
     this.id = id;
-    this.date = date;
+    this.day = day;
     this.time = time;
     this.field_id = field_id;
   }
@@ -63,26 +63,26 @@ const users = [new User(1,'admybad', 'admybad', true)];
 const reservations = [
   new Reservation(
     1,
-    "12-34-1899",
-    "29:28",
+    "Lundi",
+    "29:02",
     1
   ),
   new Reservation(
     2,
-    "67-76-4638",
-    "29:28",
+    "Mardi",
+    "31:73",
     1
   ),
   new Reservation(
     3,
-    "68-73-9373",
-    "29:28",
+    "Vendredi",
+    "83:84",
     2
   ),
   new Reservation(
     4,
-    "73-01-2800",
-    "29:28",
+    "Jeudi",
+    "54:28",
     3
   ),
 ];

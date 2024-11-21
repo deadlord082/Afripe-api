@@ -40,14 +40,29 @@ router.post(
   checkTokenMiddleware,
   (req, res, next) => {
 // 
-// vérification des paramètres(seulement si il existe)
+// vérification des paramètres (c'est pas beau)
 //     
-    if(req.body.date === undefined || req.body.time === undefined){
+    let erreur = false
+
+    if(req.body.day === undefined || req.body.time === undefined){
+      erreur = true
+    }
+    else if (req.body.day !== "Lundi" && req.body.day !== "Mardi" && req.body.day !== "Mercredi" && req.body.day !== "Jeudi" && req.body.day !== "Vendredi" && req.body.day !== "Samedi"){
+      erreur = true
+    }
+    else {
+      const time = req.body.time.split(":")
+      if(time.length() !== 2 && 10 <= Number(time[0]) <= 22 && 0 <= Number(time[1]) <= 59){
+        erreur = true
+      }
+    }
+    
+    if(erreur){
       let responseObject = {
         _links: {
           self: hal.halLinkObject("/fields/"+Number(req.params.id)+"/reservations"),
         },
-        message: "Veuiller préciser une date et une heure pour votre réservation.",
+        message: "Veuiller préciser une journée(Lundi,Mardi,...) et une heure(entre 10H et 22H) pour votre réservation.",
       };
       //Sinon, on retourne un message d'erreur
       res.status(401).format({
@@ -78,7 +93,7 @@ router.post(
 // Création de la réservation
 //   
       else{
-        const newReservation = new db.Reservation(db.reservations.length+1,req.body.date,req.body.time,Number(req.params.id));
+        const newReservation = new db.Reservation(db.reservations.length+1,req.body.day,req.body.time,Number(req.params.id));
         db.reservations.push(newReservation)
         const reservationRessourceObject = hal.mapReservationToResourceObject(newReservation)
         res.status(201).json(reservationRessourceObject);
@@ -92,14 +107,29 @@ router.delete(
   checkTokenMiddleware,
   (req, res, next) => {
   const reservation = db.reservations.find((resa) => resa.id == req.params.id);
-  const index = db.reservations.indexOf(reservation);
-  db.reservations.splice(Number(index),1)
-  //code 204 et chercher quoi renvoyer hal
-  res.status(202).format({
-    'application/json': () => {
-      res.send({success:"Succeffully deleted",reservations:db.reservations});
-    }
-  })
+  if(reservation === undefined){
+    let responseObject = {
+      _links: {
+        self: hal.halLinkObject("/fields/"+Number(req.params.id_fields)+"/reservations/"+Number(req.params.id)),
+      },
+      message: "La réservation que vous essayer de suppimmer n'existe pas",
+    };
+    res.status(401).format({
+      "application/hal+json": function () {
+        res.send(responseObject);
+      },
+    });
+  }
+  else{
+    const index = db.reservations.indexOf(reservation);
+    db.reservations.splice(Number(index),1)
+    //code 204 et chercher quoi renvoyer hal
+    res.status(202).format({
+      'application/json': () => {
+        res.send({success:"Succeffully deleted",reservations:db.reservations});
+      }
+    })
+  }
 })
 
 
