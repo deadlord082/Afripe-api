@@ -12,6 +12,11 @@
 
 ## Lancer le projet
 
+importer la BDD
+~~~bash
+afripe.sql
+~~~
+
 installer les dépendances et lancer le service.
 ~~~bash
 npm install

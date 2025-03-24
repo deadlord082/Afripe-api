@@ -1,8 +1,7 @@
-const fs = require("fs");
 const jsonwebtoken = require("jsonwebtoken");
 
 //Paramètres du JWT
-const SECRET = fs.readFileSync("private.key");
+const SECRET = process.env.SALTING;
 const EXPIRATION = "1 day";
 
 /**
