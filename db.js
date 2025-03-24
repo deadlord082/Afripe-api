@@ -5,31 +5,65 @@ const saltOrRounds = 5;
 
 //Les Modèles de données
 
-class Field {
-  constructor(id, name, isOpen) {
+class User {
+  constructor(id, name, email, password = '', image, lang){
     this.id = id;
     this.name = name;
-    this.isOpen = isOpen;
-  }
-}
-
-class Reservation {
-  constructor(id, day, time, field_id) {
-    this.id = id;
-    this.day = day;
-    this.time = time;
-    this.field_id = field_id;
-  }
-}
-
-
-class User {
-  constructor(id,pseudo, password = '', isAdmin = false){
-    this.id = id;
-    this.pseudo = pseudo;
+    this.email = email;
     //On conserve les mots de passe hashés
     this.password = bcrypt.hashSync(password, saltOrRounds );
-    this.isAdmin = isAdmin
+    this.image = image;
+    this.lang = lang
+  }
+}
+
+class Product {
+  constructor(id, name, description, quantity, size, image, category_id, user_id, price, is_available){
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.quantity = quantity;
+    this.size = size;
+    this.image = image;
+    this.category_id = category_id;
+    this.user_id = user_id;
+    this.price = price;
+    this.is_available = is_available;
+  }
+}
+
+class Category {
+  constructor(id, name){
+    this.id = id;
+    this.name = name;
+  }
+}
+
+class Booking {
+  constructor(id, user_id, product_id, date_start, date_end){
+    this.id = id;
+    this.user_id = user_id;
+    this.product_id = product_id;
+    this.date_start = date_start;
+    this.date_end = date_end;
+  }
+}
+
+class Message {
+  constructor(id, message, booking_id){
+    this.id = id;
+    this.message = message;
+    this.booking_id = booking_id;
+  }
+}
+
+class Rewiew {
+  constructor(id, rating, rewiew, product_id, user_id){
+    this.id = id;
+    this.rating = rating;
+    this.rewiew = rewiew;
+    this.product_id = product_id;
+    this.user_id = user_id;
   }
 }
 
@@ -58,34 +92,4 @@ const fields = [
 ];
 
 
-const users = [new User(1,'admybad', 'admybad', true)];
-
-const reservations = [
-  new Reservation(
-    1,
-    "Lundi",
-    "29:02",
-    1
-  ),
-  new Reservation(
-    2,
-    "Mardi",
-    "31:73",
-    1
-  ),
-  new Reservation(
-    3,
-    "Vendredi",
-    "83:84",
-    2
-  ),
-  new Reservation(
-    4,
-    "Jeudi",
-    "54:28",
-    3
-  ),
-];
-
-
-module.exports = { fields, users ,reservations,Reservation,Field};
+module.exports = { fields, users ,User ,Reservation ,Field };
