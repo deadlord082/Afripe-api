@@ -1,6 +1,13 @@
 var bcrypt = require('bcrypt');
+const mysql = require('mysql')
 
-//Salt pour le hashage des mots de passe
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
+})
+
 const saltOrRounds = 5;
 
 //Les Modèles de données
@@ -67,29 +74,21 @@ class Rewiew {
   }
 }
 
-//La base de données
-const fields = [
-  new Field(
-    1,
-    "A",
-    true
-  ),
-  new Field(
-    2,
-    "B",
-    false
-  ),
-  new Field(
-    3,
-    "C",
-    true
-  ),
-  new Field(
-    4,
-    "D",
-    true
-  ),
-];
+connection.connect()
+
+// Example
+connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
+  if (err) throw err
+
+  console.log('The solution is: ', rows[0].solution)
+})
+
+const users = connection.query('SELECT * FROM users', (err, rows, fields) => {
+  if (err) throw err
+  console.log('Error : ', rows)
+})
+
+connection.end()
 
 
-module.exports = { fields, users ,User ,Reservation ,Field };
+module.exports = { users ,User };
